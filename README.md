@@ -207,7 +207,45 @@ This will populate the database with 20 sample questions.
 
 ## Deployment
 
-### Frontend
+### Render Deployment (Recommended)
+
+This project is configured for deployment on [Render](https://render.com). The repository includes a `render.yaml` file that defines the services for both frontend and backend.
+
+#### Prerequisites
+1. A Render account
+2. A MongoDB Atlas account (for database)
+
+#### Steps
+1. Fork this repository to your GitHub account
+2. Log in to Render and connect your GitHub account
+3. Create a new Web Service and select your forked repository
+4. Render will automatically detect the `render.yaml` file and configure both services
+5. Add your environment variables in the Render dashboard:
+   - For backend: `MONGODB_URI`, `JWT_SECRET`
+   - For frontend: `VITE_API_URL` (set to your backend service URL)
+
+#### Manual Configuration (if automatic detection fails)
+If Render doesn't automatically detect the configuration:
+- For backend:
+  - Root Directory: `backend`
+  - Build Command: `npm install`
+  - Start Command: `npm start`
+- For frontend:
+  - Root Directory: `frontend`
+  - Build Command: `npm install && npm run build`
+  - Publish Directory: `dist`
+
+### Environment Variables for Production
+
+Make sure to set the appropriate environment variables in your production environment:
+- `MONGODB_URI` - Your MongoDB connection string
+- `JWT_SECRET` - A secret key for JWT token signing
+- `PORT` - Port for the backend service (optional, defaults to 5000)
+- `VITE_API_URL` - URL of your deployed backend API (for frontend)
+
+### Traditional Deployment
+
+#### Frontend
 
 To build the frontend for production:
 
@@ -220,7 +258,7 @@ The build files will be in the `dist` directory.
 
 For deployment, you may need to set environment variables like `VITE_API_BASE_URL` to point to your deployed backend.
 
-### Backend
+#### Backend
 
 For production deployment, ensure:
 1. Environment variables are properly set
@@ -232,13 +270,6 @@ cd backend
 npm install -g pm2
 pm2 start server.js
 ```
-
-### Environment Variables for Production
-
-Make sure to set the appropriate environment variables in your production environment:
-- `MONGODB_URI`
-- `JWT_SECRET`
-- `PORT`
 
 ## Contributing
 
