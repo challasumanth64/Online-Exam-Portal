@@ -7,9 +7,17 @@ const mongoose = require('mongoose');
 dotenv.config();
 
 const app = express();
+// Use PORT for Render, or default to 5000 for local development
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// Configure CORS for production
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connect to MongoDB
@@ -28,6 +36,6 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
 });

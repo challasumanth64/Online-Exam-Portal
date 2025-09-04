@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: online-exam-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: FRONTEND_URL
+        value: https://online-exam-frontend.onrender.com
+
+  - type: web
+    name: online-exam-frontend
+    env: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 18
