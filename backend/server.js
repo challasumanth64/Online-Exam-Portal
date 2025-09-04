@@ -20,13 +20,33 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+// Connect to MongoDB with better error handling
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('ERROR: MONGODB_URI is not defined in environment variables');
+  console.error('Please set MONGODB_URI in your .env file');
+  console.error('Example: MONGODB_URI=mongodb://localhost:27017/online_exam_db');
+  process.exit(1);
+}
+
+// Validate MongoDB URI format
+if (!MONGODB_URI.startsWith('mongodb://') && !MONGODB_URI.startsWith('mongodb+srv://')) {
+  console.error('ERROR: Invalid MONGODB_URI format');
+  console.error('Connection string must start with "mongodb://" or "mongodb+srv://"');
+  console.error('Current value:', MONGODB_URI);
+  process.exit(1);
+}
+
+mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log(err));
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => {
+  console.error('MongoDB connection error:', err.message);
+  process.exit(1);
+});
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/questions', require('./routes/questions'));
